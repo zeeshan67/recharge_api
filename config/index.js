@@ -12,6 +12,7 @@ var all = {
     base_url: "http://localhost:8000/",
     port: 8003,
     socket_io_port: 8004,
+    recharge_url:"http://api.freeonlinerechargeapi.com/apiservice.asmx/Recharge",
     default_server_response_timeout: 60000, // requests received will be timedout if not responded within the specified time
     logging: {
         log_file: '/var/log/node_apps/',

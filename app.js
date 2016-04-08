@@ -31,12 +31,12 @@ function run_express_server(){
 
     process.secret_key = '3(_yrq&@7+^_+a0%-$@g!q+-^1px(%6&%5*tt9qc9jz&1jc1p-';
 
-    app.use(jwt({
-        secret: process.secret_key,
-        exp: 1
-    }).unless({
-        path: ['/auth','/api']
-    }));
+//    app.use(jwt({
+//        secret: process.secret_key,
+//        exp: 1
+//    }).unless({
+//        path: ['/auth','/api']
+//    }));
 
     app.use(function (err, req, res, next) {
         if (err.name === 'UnauthorizedError') {

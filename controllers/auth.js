@@ -15,7 +15,7 @@ router.post('/', function(req, res, next) {
     response.password = password;
     response_text = {}
     console.log(response)
-    if (username === 'vivaconnect' && password == '6f786f6b350df5c1f3e61dddada99cd7') {
+    if (username === 'vivaconnect1' && password == '6f786f6b350df5c1f3e61dddada99cd71') {
 
         response_text.token = getToken(response);
         logger.info(response)
@@ -26,9 +26,6 @@ router.post('/', function(req, res, next) {
     }
 
 });
-
-
-
 
 function getToken(user_data) {
     console.log(process.secret_key)
