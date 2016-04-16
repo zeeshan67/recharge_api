@@ -61,7 +61,7 @@ var all = {
             connection_limit: 10,
             host: '104.255.195.153',
             user: 'webozind_karan',
-            password: 'karan@31',
+            password: 'karan@321',
             database: 'webozind_recharge_db',
             port:5432
         }
