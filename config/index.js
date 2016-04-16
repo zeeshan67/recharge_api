@@ -59,7 +59,7 @@ var all = {
         init: true,
         options: {
             connection_limit: 10,
-            host: '104.255.195.153',
+            host: 'localhost',
             user: 'webozind_karan',
             password: 'karan_321',
             database: 'webozind_recharge_db',
