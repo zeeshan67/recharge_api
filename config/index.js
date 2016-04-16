@@ -14,7 +14,7 @@ var all = {
     socket_io_port: 8004,
     default_server_response_timeout: 60000, // requests received will be timedout if not responded within the specified time
     logging: {
-        log_file: '/var/log/',
+        log_file: '/home/webozind/public_html/node_apps/logs/',
         console: true,
         json: false,
         level: 'silly', //[silly,debug,verbose,info,warn,error]
