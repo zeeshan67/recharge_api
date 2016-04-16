@@ -59,10 +59,10 @@ var all = {
         init: true,
         options: {
             connection_limit: 10,
-            host: 'localhost',
-            user: 'postgres',
-            password: 'root',
-            database: 'recharge_db',
+            host: '104.255.195.153',
+            user: 'webozind_karan',
+            password: 'karan@31',
+            database: 'webozind_recharge_db',
             port:5432
         }
     },
