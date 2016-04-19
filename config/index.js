@@ -14,7 +14,7 @@ var all = {
     socket_io_port: 8004,
     default_server_response_timeout: 60000, // requests received will be timedout if not responded within the specified time
     logging: {
-        log_file: '/home/webozind/public_html/node_apps/logs/',
+        log_file: '/var/log/node_apps/',
         console: true,
         json: false,
         level: 'silly', //[silly,debug,verbose,info,warn,error]
@@ -60,9 +60,9 @@ var all = {
         options: {
             connection_limit: 10,
             host: 'localhost',
-            user: 'webozind_karan',
-            password: 'karan_321',
-            database: 'webozind_recharge_db',
+            user: 'postgres',
+            password: 'karan321',
+            database: 'recharge_db',
             port:5432
         }
     },
