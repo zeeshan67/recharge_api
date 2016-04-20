@@ -61,7 +61,7 @@ var all = {
             connection_limit: 10,
             host: 'localhost',
             user: 'postgres',
-            password: 'karan321',
+            password: 'root',
             database: 'recharge_db',
             port:5432
         }
