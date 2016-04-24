@@ -38,13 +38,13 @@ router.post('/user_recharge',function(req,res,next)
     var request_id = req.req_uuid; //params.request_id;
     var username = params.username;
     var user_id = parseInt(params.user_id);
-    console.log('Mobile Number',mobile_number);
     var request_time = moment();
     var operator_code = parseInt(params.operator_code);
     var event_date= request_time.format('YYYY-MM-DD');
     res.send("request received");
 
-    var query_params = {uid:config.recharge_api.user_id,pwd:config.recharge_api.pwd,mn:mobile_number,op:34,amt:amount,reqid:request_id};
+    var query_params = {uid:config.recharge_api.user_id,pwd:config.recharge_api.pwd,mn:mobile_number,op:operator_code,amt:amount,reqid:request_id};
+    logger.debug("Query params of recharge api",query_params)
     httpreq.post(config.recharge_api.recharge_url,query_params,function(err,response)
     {
         if (err)
@@ -52,7 +52,7 @@ router.post('/user_recharge',function(req,res,next)
             logger.error("Error occurred while hiting recharge url",{error:err})
         }
         else{
-            logger.debug([mobile_number,amount,circle,operator,new Date(),event_date,request_id,
+            logger.debug([mobile_number,amount,circle,operator_code,new Date(),event_date,request_id,
                 response.body.toString(),username,user_id
             ])
 
