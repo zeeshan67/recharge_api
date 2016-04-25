@@ -24,7 +24,15 @@ router.get('/',function(req,res,next){
         }
         console.log("CURRENT TIME",result.rows[0]);
     })
-    res.send("request received")
+//    postgres.pool.query('update user_master set credit_used=$1 ,credit_available=$2 where id =$3;',[10,1490,1],function(er,update_result)
+//    {
+//        if(!er){logger.info('Update Successfull')}
+//        else{
+//            logger.error('Update Failed')
+//            logger.error(er)
+//        }
+//    })
+//    res.send("request received")
 
 })
 
@@ -37,6 +45,8 @@ router.post('/user_recharge',function(req,res,next)
     var circle = params.circle;
     var request_id = req.req_uuid; //params.request_id;
     var username = params.username;
+    var credit_used = parseFloat(params.credit_used);
+    var credit_available = parseFloat(params.credit_available);
     var user_id = parseInt(params.user_id);
     var request_time = moment();
     var operator_code = parseInt(params.operator_code);
@@ -60,6 +70,7 @@ router.post('/user_recharge',function(req,res,next)
             'recharge_status,username,user_id) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ;'
 
             parseString(response.body.toString(), function (err, result) {
+                var status = result.Result.status[0];
                 postgres.pool.query('insert into recharge_reports(mobile_number,amount,circle,operator_code,date_time,date,request_id,' +
                         'user_name,user_id,recharge_status,remark,balance) ' +
                         'values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
@@ -69,6 +80,16 @@ router.post('/user_recharge',function(req,res,next)
                                  ],
                      function(err, result) {
                         if(!err){
+                            if (status == 'SUCCESS'){
+                                postgres.pool.query('update user_master set credit_used=$1 ,credit_available=$2 where id =$3;',[credit_used+amount,credit_available-amount,user_id],function(er,update_result)
+                                {
+                                    if(!er){logger.info('Update Successfull')}
+                                    else{
+                                        logger.error('Update Failed')
+                                        logger.error(err)
+                                    }
+                                })
+                            }
                             logger.info('Successful Inserted response from recharge API');
                         }else{
                             logger.error(err)
