@@ -23,7 +23,9 @@ router.get('/',function(req,res,next){
             return console.error('error running query', err);
         }
         console.log("CURRENT TIME",result.rows[0]);
+
     })
+
 //    postgres.pool.query('update user_master set credit_used=$1 ,credit_available=$2 where id =$3;',[10,1490,1],function(er,update_result)
 //    {
 //        if(!er){logger.info('Update Successfull')}
@@ -51,7 +53,6 @@ router.post('/user_recharge',function(req,res,next)
     var request_time = moment();
     var operator_code = parseInt(params.operator_code);
     var event_date= request_time.format('YYYY-MM-DD');
-    res.send("request received");
 
     var query_params = {uid:config.recharge_api.user_id,pwd:config.recharge_api.pwd,mn:mobile_number,op:operator_code,amt:amount,reqid:request_id};
     logger.debug("Query params of recharge api",query_params)
@@ -78,9 +79,11 @@ router.post('/user_recharge',function(req,res,next)
                         result.Result.status[0],result.Result.remark[0],result.Result.balance[0] || 0.0
 
                                  ],
-                     function(err, result) {
+                     function(err, pgresult) {
                         if(!err){
+                            res.end(JSON.stringify({"code":200,"recharge_status":status,"remark":result.Result.remark[0],"request_id":request_id}))
                             if (status == 'SUCCESS'){
+
                                 postgres.pool.query('update user_master set credit_used=$1 ,credit_available=$2 where id =$3;',[credit_used+amount,credit_available-amount,user_id],function(er,update_result)
                                 {
                                     if(!er){logger.info('Update Successfull')}
@@ -92,6 +95,7 @@ router.post('/user_recharge',function(req,res,next)
                             }
                             logger.info('Successful Inserted response from recharge API');
                         }else{
+                            res.end(JSON.stringify({"code":500,"recharge_status":"failed","remark":"","request_id":request_id}))
                             logger.error(err)
                             logger.error('Error while inserting Response from recharge API!!!!!!');
                         }
