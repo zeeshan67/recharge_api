@@ -61,6 +61,7 @@ router.post('/user_recharge',function(req,res,next)
         if (err)
         {
             logger.error("Error occurred while hiting recharge url",{error:err})
+            res.end(JSON.stringify({"code":500,"recharge_status":"failed","remark":err,"request_id":request_id}))
         }
         else{
             logger.debug([mobile_number,amount,circle,operator_code,new Date(),event_date,request_id,
@@ -70,7 +71,7 @@ router.post('/user_recharge',function(req,res,next)
             var sql = 'insert into recharge_reports(mobile_number,amount,circle,operator,date_time,date,request_id,' +
             'recharge_status,username,user_id) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ;'
 
-            parseString(response.body.toString(), function (err, result) {
+            parseString(response.body.toString(), function (parse_err, result) {
                 var status = result.Result.status[0];
                 postgres.pool.query('insert into recharge_reports(mobile_number,amount,circle,operator_code,date_time,date,request_id,' +
                         'user_name,user_id,recharge_status,remark,balance) ' +
@@ -79,8 +80,8 @@ router.post('/user_recharge',function(req,res,next)
                         result.Result.status[0],result.Result.remark[0],result.Result.balance[0] || 0.0
 
                                  ],
-                     function(err, pgresult) {
-                        if(!err){
+                     function(pgerr, pgresult) {
+                        if(!pgerr){
                             res.end(JSON.stringify({"code":200,"recharge_status":status,"remark":result.Result.remark[0],"request_id":request_id}))
                             if (status == 'SUCCESS'){
 
@@ -95,7 +96,7 @@ router.post('/user_recharge',function(req,res,next)
                             }
                             logger.info('Successful Inserted response from recharge API');
                         }else{
-                            res.end(JSON.stringify({"code":500,"recharge_status":"failed","remark":"","request_id":request_id}))
+                            res.end(JSON.stringify({"code":500,"recharge_status":"failed","remark":err,"request_id":request_id}))
                             logger.error(err)
                             logger.error('Error while inserting Response from recharge API!!!!!!');
                         }
