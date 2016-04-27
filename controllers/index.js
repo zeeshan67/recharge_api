@@ -63,6 +63,7 @@ router.post('/user_recharge',function(req,res,next)
             logger.error("Error occurred while hiting recharge url",{error:err})
             res.end(JSON.stringify({"code":500,"recharge_status":"failed","remark":err,"request_id":request_id}))
         }
+
         else{
             logger.debug([mobile_number,amount,circle,operator_code,new Date(),event_date,request_id,
                 response.body.toString(),username,user_id
