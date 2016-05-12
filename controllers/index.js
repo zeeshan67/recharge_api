@@ -74,12 +74,16 @@ router.post('/user_recharge',function(req,res,next)
 
             parseString(response.body.toString(), function (parse_err, result) {
                 var status = result.Result.status[0];
+                console.log([mobile_number,amount,circle,operator_code,new Date(),event_date,request_id,username,user_id,
+                    result.Result.status[0],result.Result.remark[0],result.Result.balance[0] || 0.0,parseInt(result.Result.ec[0]),
+                        result.Result.field1[0] || ""
+                ])
                 postgres.pool.query('insert into recharge_reports(mobile_number,amount,circle,operator_code,date_time,date,request_id,' +
                         'user_name,user_id,recharge_status,remark,balance,error_code,operator_transaction_id) ' +
-                        'values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
+                        'values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)',
                     [mobile_number,amount,circle,operator_code,new Date(),event_date,request_id,username,user_id,
-                        result.Result.status[0],result.Result.remark[0],result.Result.balance[0] || 0.0,parseInt(result.Result.ec),
-                        result.Result.field1
+                        result.Result.status[0],result.Result.remark[0],result.Result.balance[0] || 0.0,parseInt(result.Result.ec[0]),
+                        result.Result.field1[0] || ""
                                  ],
                      function(pgerr, pgresult) {
                         if(!pgerr){
