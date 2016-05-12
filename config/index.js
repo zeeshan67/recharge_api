@@ -2,6 +2,26 @@ var _ = require('lodash');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+
+var crypto = require('crypto'),
+    algorithm = 'aes-256-ctr',
+    password = 'd6F3Efeq';
+
+function encrypt(text){
+    var cipher = crypto.createCipher(algorithm,password)
+    var crypted = cipher.update(text,'utf8','hex')
+    crypted += cipher.final('hex');
+    console.log(crypted)
+    return crypted;
+}
+
+function decrypt(text){
+    var decipher = crypto.createDecipher(algorithm,password)
+    var dec = decipher.update(text,'hex','utf8')
+    dec += decipher.final('utf8');
+    return dec;
+}
+
 var app_name = "recharge_api"; //remember to rename this variable with new name(without spaces), it will also act as default mongodb database name and logging file name
 var db_name = app_name; //change if you want to have different database name than the application name.
 var all = {
@@ -40,9 +60,10 @@ var all = {
         }
     },
     recharge_api:{
-        recharge_url:"http://api.freeonlinerechargeapi.com/apiservice.asmx/Recharge",
+        recharge_url:"http://api.billpaymart.com/apiservice.asmx/Recharge",
         user_id:8655655888,
-        pwd:615667
+        pwd:615667,
+        apiToken:decrypt("50d9d09172227e73351abc58a6bb4d9eb24a85ed80b58a6124f002729d8b2b65")
 
     },
     mysql: {

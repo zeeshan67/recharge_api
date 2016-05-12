@@ -22,10 +22,10 @@ router.get('/',function(req,res,next){
         if (err) {
             return console.error('error running query', err);
         }
-        console.log("CURRENT TIME",result.rows[0]);
+        console.log("CURRENT TIME",result.rows[0],config.recharge_api.apiToken);
 
     })
-
+    res.send("request received")
 //    postgres.pool.query('update user_master set credit_used=$1 ,credit_available=$2 where id =$3;',[10,1490,1],function(er,update_result)
 //    {
 //        if(!er){logger.info('Update Successfull')}
@@ -54,7 +54,7 @@ router.post('/user_recharge',function(req,res,next)
     var operator_code = parseInt(params.operator_code);
     var event_date= request_time.format('YYYY-MM-DD');
 
-    var query_params = {uid:config.recharge_api.user_id,pwd:config.recharge_api.pwd,mn:mobile_number,op:operator_code,amt:amount,reqid:request_id};
+    var query_params = {apiToken:config.recharge_api.apiToken.toString(),mn:mobile_number,op:operator_code,amt:amount,reqid:request_id,field1:"",field2:""};
     logger.debug("Query params of recharge api",query_params)
     httpreq.post(config.recharge_api.recharge_url,query_params,function(err,response)
     {
@@ -75,11 +75,11 @@ router.post('/user_recharge',function(req,res,next)
             parseString(response.body.toString(), function (parse_err, result) {
                 var status = result.Result.status[0];
                 postgres.pool.query('insert into recharge_reports(mobile_number,amount,circle,operator_code,date_time,date,request_id,' +
-                        'user_name,user_id,recharge_status,remark,balance) ' +
+                        'user_name,user_id,recharge_status,remark,balance,error_code,operator_transaction_id) ' +
                         'values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
                     [mobile_number,amount,circle,operator_code,new Date(),event_date,request_id,username,user_id,
-                        result.Result.status[0],result.Result.remark[0],result.Result.balance[0] || 0.0
-
+                        result.Result.status[0],result.Result.remark[0],result.Result.balance[0] || 0.0,parseInt(result.Result.ec),
+                        result.Result.field1
                                  ],
                      function(pgerr, pgresult) {
                         if(!pgerr){
