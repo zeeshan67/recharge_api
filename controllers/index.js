@@ -91,14 +91,14 @@ router.post('/user_recharge',function(req,res,next)
                                     if(!er){logger.info('Update Successfull')}
                                     else{
                                         logger.error('Update Failed')
-                                        logger.error(err)
+                                        logger.error(er)
                                     }
                                 })
                             }
                             logger.info('Successful Inserted response from recharge API');
                         }else{
                             res.end(JSON.stringify({"code":500,"recharge_status":"failed","remark":err,"request_id":request_id}))
-                            logger.error(err)
+                            logger.error(pgerr)
                             logger.error('Error while inserting Response from recharge API!!!!!!');
                         }
 
