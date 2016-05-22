@@ -90,7 +90,7 @@ router.post('/user_recharge',function(req,res,next)
                             res.end(JSON.stringify({"code":200,"recharge_status":status,"remark":result.Result.remark[0],"request_id":request_id}))
                             if (status == 'SUCCESS'){
 
-                                postgres.pool.query('update user_master set credit_used=$1 ,credit_available=$2 where id =$3;',[credit_used+amount,credit_available-amount,user_id],function(er,update_result)
+                                postgres.pool.query('update user_master set credit_used=credit_used+$1 ,credit_available=credit_available-$2+(margin/100*$2) where id =$3;',[amount,amount,user_id],function(er,update_result)
                                 {
                                     if(!er){logger.info('Update Successfull')}
                                     else{
